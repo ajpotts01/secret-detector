@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"io"
 	"os"
+
+	"github.com/ajpotts01/secret-detector/internal/detector"
+	"github.com/ajpotts01/secret-detector/internal/input"
 )
 
 func start(args []string, stdout, stderr io.Writer) error {
@@ -22,6 +25,17 @@ func start(args []string, stdout, stderr io.Writer) error {
 	}
 
 	fmt.Fprintf(stdout, "Scanning: %s\n", *path)
+
+	var findings []string
+	err := input.ReadInputSingle(os.DirFS("."), *path, func(lineNum int, line string) {
+		newFindings := detector.ScanLine(lineNum, line)
+		findings = append(findings, newFindings...)
+	})
+	if err != nil {
+		return fmt.Errorf("Error: %w", err)
+	}
+
+	fmt.Fprintln(stdout, findings)
 	return nil
 }
 
