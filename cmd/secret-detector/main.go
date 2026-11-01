@@ -24,7 +24,7 @@ func start(args []string, stdout, stderr io.Writer) error {
 		return fmt.Errorf("-path is required")
 	}
 
-	fmt.Fprintf(stdout, "Scanning: %s\n", *path)
+	fmt.Fprintf(stdout, "Scanning: %s\n", *path) //nolint:errcheck
 
 	var findings []string
 	err := input.ReadInputSingle(os.DirFS("."), *path, func(lineNum int, line string) {
@@ -32,10 +32,10 @@ func start(args []string, stdout, stderr io.Writer) error {
 		findings = append(findings, newFindings...)
 	})
 	if err != nil {
-		return fmt.Errorf("Error: %w", err)
+		return fmt.Errorf("error: %w", err)
 	}
 
-	fmt.Fprintln(stdout, findings)
+	fmt.Fprintln(stdout, findings) //nolint:errcheck
 	return nil
 }
 

@@ -18,7 +18,9 @@ func ReadInputSingle(fileSys fs.FS, path string, worker func(lineNum int, line s
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+
+	// What's the convention for dealing with this when using golangci?
+	defer f.Close() //nolint:errcheck
 	return readFile(f, worker)
 }
 
