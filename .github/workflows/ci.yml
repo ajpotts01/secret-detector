@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v7
+      - name: Go setup
+        uses: actions/setup-go@v7
+        with:
+          go-version-file: go.mod
+      - name: Go fmt
+        run: test -z "$(gofmt -l .)"
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: latest
+      - name: Unit tests (go test)
+        run: go test -race -v ./...
+      - name: Go build
+        run: go build -o secret-detector ./cmd/secret-detector
+      - name: Smoke test binary
+        run: ./secret-detector -path README.md
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: secret-detector-linux-amd64
+          path: secret-detector

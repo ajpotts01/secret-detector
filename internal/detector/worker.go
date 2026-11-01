@@ -6,6 +6,7 @@ import (
 )
 
 const AwsKeyPattern = `AKIA[0-9A-Z]{16}`
+
 var awsKey = regexp.MustCompile(AwsKeyPattern)
 
 func ScanLine(lineNum int, line string) []string {

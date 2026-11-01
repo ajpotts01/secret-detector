@@ -4,6 +4,9 @@ import (
 	"bufio"
 	"io"
 	"io/fs"
+	"slices"
+
+	"github.com/ajpotts01/secret-detector/internal/config"
 )
 
 // ReadInputSingle opens a file and allows specification of a worker function for each line.
@@ -19,8 +22,22 @@ func ReadInputSingle(fileSys fs.FS, path string, worker func(lineNum int, line s
 	return readFile(f, worker)
 }
 
-func ReadInputDir(path string, worker func(lineNum int, line string)) error {
-	return nil // stubbed out for now
+func ReadInputDir(fileSys fs.FS, rootPath string, worker func(lineNum int, line string)) error {
+	skipDirs := config.DefaultIgnoredDirs()
+	return fs.WalkDir(fileSys, rootPath, func(path string, entry fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if entry.IsDir() {
+			if slices.Contains(skipDirs, entry.Name()) {
+				return fs.SkipDir
+			}
+			return nil
+		}
+
+		return ReadInputSingle(fileSys, path, worker)
+	})
 }
 
 func readFile(r io.Reader, worker func(lineNum int, line string)) error {
