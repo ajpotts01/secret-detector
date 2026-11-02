@@ -24,14 +24,14 @@ func DefaultRules() []Rule {
 			Pattern:     regexp.MustCompile(awsKeyPattern),
 		},
 		{
-			ID: "gh-pat",
+			ID:          "gh-pat",
 			Description: "Github personal access tokens",
-			Pattern: regexp.MustCompile(githubPatPattern),
+			Pattern:     regexp.MustCompile(githubPatPattern),
 		},
 		{
-			ID: "gcp-key",
+			ID:          "gcp-key",
 			Description: "Google Cloud API keys",
-			Pattern: regexp.MustCompile(gcpApiKeyPattern),
+			Pattern:     regexp.MustCompile(gcpApiKeyPattern),
 		},
 	}
 }

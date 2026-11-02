@@ -7,10 +7,10 @@ import (
 )
 
 type Finding struct {
-	FilePath       string
-	LineNumber     int
-	RuleID         string
-	RedactedSecret string
+	FilePath       string `json:"file_path"`
+	LineNumber     int    `json:"line_number"`
+	RuleID         string `json:"rule_id"`
+	RedactedSecret string `json:"redacted_secret"`
 }
 
 type Engine struct {

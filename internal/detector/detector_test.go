@@ -33,12 +33,12 @@ func TestRedaction(t *testing.T) {
 		},
 		{
 			name: "Github PAT",
-			line: "ghp_1234567890abcdefghijklmnopqrstuvwxyz",
+			line: "ghp_1234567890abcdefghijklmnopqrstuvwxyz", //secret-detector:ignore
 			want: []detector.Finding{
 				{
-					RuleID: "gh-pat",
-					FilePath: "test.txt",
-					LineNumber: 1,
+					RuleID:         "gh-pat",
+					FilePath:       "test.txt",
+					LineNumber:     1,
 					RedactedSecret: "ghp_...wxyz",
 				},
 			},

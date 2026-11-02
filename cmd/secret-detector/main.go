@@ -20,6 +20,7 @@ func start(args []string, stdout, stderr io.Writer) error {
 	fs.SetOutput(stderr)
 
 	path := fs.String("path", "", "path of file to scan")
+	format := fs.String("format", "stdout", "format to output findings - stdout or json")
 
 	if err := fs.Parse(args); err != nil {
 		return err
@@ -29,7 +30,17 @@ func start(args []string, stdout, stderr io.Writer) error {
 		return fmt.Errorf("-path is required")
 	}
 
-	fmt.Fprintf(stdout, "Scanning: %s\n", *path) //nolint:errcheck
+	var rf report.Format
+	switch *format {
+	case "stdout":
+		rf = report.StdOutFormat
+	case "json":
+		rf = report.JSONFormat
+	default:
+		return fmt.Errorf("incorrect format: must specify json or stdout")
+	}
+
+	fmt.Fprintf(stderr, "Scanning: %s\n", *path) //nolint:errcheck
 
 	var findings []detector.Finding
 	ruleEngine := detector.NewEngine(config.DefaultRules())
@@ -41,7 +52,7 @@ func start(args []string, stdout, stderr io.Writer) error {
 		return fmt.Errorf("error: %w", err)
 	}
 
-	if err := report.Write(stdout, findings); err != nil {
+	if err := report.Write(stdout, findings, rf); err != nil {
 		return err
 	}
 	if len(findings) > 0 {

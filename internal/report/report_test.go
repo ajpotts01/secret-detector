@@ -19,9 +19,8 @@ func TestReport(t *testing.T) {
 	}
 
 	var buf bytes.Buffer
-	//fmt.Fprintf(w, "%s:%d [%s] %s\n", f.FilePath, f.LineNumber, f.RuleID, f.RedactedSecret)
 	want := "test.txt:24 [aws-key] AKIA...MPLE\n"
-	err := report.Write(&buf, findings)
+	err := report.Write(&buf, findings, report.StdOutFormat)
 	if err != nil {
 		t.Fatalf("error reading file: %v", err)
 	}
