@@ -1,6 +1,8 @@
 package detector
 
 import (
+	"strings"
+
 	"github.com/ajpotts01/secret-detector/internal/config"
 )
 
@@ -25,6 +27,9 @@ func NewEngine(rules []config.Rule) *Engine {
 // If non-empty, append a Finding with a redacted copy of the match.
 func (e *Engine) InspectLine(filePath string, lineNumber int, line string) []Finding {
 	var findings []Finding
+	if strings.Contains(line, "secret-detector:ignore") {
+		return nil
+	}
 	for _, r := range e.rules {
 		if match := r.RunRule(line); match != "" {
 			// create finding

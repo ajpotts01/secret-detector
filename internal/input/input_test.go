@@ -11,7 +11,7 @@ import (
 func TestReadInputSingle(t *testing.T) {
 	fs := fstest.MapFS{
 		"test.txt": &fstest.MapFile{
-			Data: []byte("Hello!\nAKIAIOSFODNN7EXAMPLE"),
+			Data: []byte("Hello!\nAKIAIOSFODNN7EXAMPLE"), //secret-detector:ignore
 		},
 	}
 
@@ -25,7 +25,7 @@ func TestReadInputSingle(t *testing.T) {
 		t.Fatalf("error reading file: %v", err)
 	}
 
-	want := []string{"Hello!", "AKIAIOSFODNN7EXAMPLE"}
+	want := []string{"Hello!", "AKIAIOSFODNN7EXAMPLE"} //secret-detector:ignore
 	if !slices.Equal(got, want) {
 		t.Errorf("got %v, want %v", got, want)
 	}

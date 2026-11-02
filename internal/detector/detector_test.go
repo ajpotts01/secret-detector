@@ -21,7 +21,7 @@ func TestRedaction(t *testing.T) {
 		},
 		{
 			name: "AWS key",
-			line: "AKIAIOSFODNN7EXAMPLE",
+			line: "AKIAIOSFODNN7EXAMPLE", //secret-detector:ignore
 			want: []detector.Finding{
 				{
 					RuleID:         "aws-key",
@@ -30,6 +30,11 @@ func TestRedaction(t *testing.T) {
 					RedactedSecret: "AKIA...MPLE",
 				},
 			},
+		},
+		{
+			name: "Ignored line",
+			line: "key := AKIAIOSFODNN7EXAMPLE //secret-detector:ignore",
+			want: nil,
 		},
 	}
 
