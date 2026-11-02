@@ -32,6 +32,18 @@ func TestRedaction(t *testing.T) {
 			},
 		},
 		{
+			name: "Github PAT",
+			line: "ghp_1234567890abcdefghijklmnopqrstuvwxyz",
+			want: []detector.Finding{
+				{
+					RuleID: "gh-pat",
+					FilePath: "test.txt",
+					LineNumber: 1,
+					RedactedSecret: "ghp_...wxyz",
+				},
+			},
+		},
+		{
 			name: "Ignored line",
 			line: "key := AKIAIOSFODNN7EXAMPLE //secret-detector:ignore",
 			want: nil,
