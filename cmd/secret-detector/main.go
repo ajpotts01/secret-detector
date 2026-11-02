@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"io"
@@ -11,6 +12,8 @@ import (
 	"github.com/ajpotts01/secret-detector/internal/input"
 	"github.com/ajpotts01/secret-detector/internal/report"
 )
+
+var ErrHasFindings = errors.New("secrets detected")
 
 func start(args []string, stdout, stderr io.Writer) error {
 	fs := flag.NewFlagSet("secret-detector", flag.ContinueOnError)
@@ -38,7 +41,13 @@ func start(args []string, stdout, stderr io.Writer) error {
 		return fmt.Errorf("error: %w", err)
 	}
 
-	return report.Write(stdout, findings)
+	if err := report.Write(stdout, findings); err != nil {
+		return err
+	}
+	if len(findings) > 0 {
+		return ErrHasFindings
+	}
+	return nil
 }
 
 func main() {
