@@ -9,6 +9,7 @@ import (
 	"github.com/ajpotts01/secret-detector/internal/config"
 	"github.com/ajpotts01/secret-detector/internal/detector"
 	"github.com/ajpotts01/secret-detector/internal/input"
+	"github.com/ajpotts01/secret-detector/internal/report"
 )
 
 func start(args []string, stdout, stderr io.Writer) error {
@@ -29,16 +30,15 @@ func start(args []string, stdout, stderr io.Writer) error {
 
 	var findings []detector.Finding
 	ruleEngine := detector.NewEngine(config.DefaultRules())
-	err := input.ReadSingleFile(os.DirFS("."), *path, func(lineNum int, line string) {
-		newFindings := ruleEngine.InspectLine(*path, lineNum, line)
+	err := input.ReadDir(os.DirFS("."), *path, func(filePath string, lineNum int, line string) {
+		newFindings := ruleEngine.InspectLine(filePath, lineNum, line)
 		findings = append(findings, newFindings...)
 	})
 	if err != nil {
 		return fmt.Errorf("error: %w", err)
 	}
 
-	fmt.Fprintln(stdout, findings) //nolint:errcheck
-	return nil
+	return report.Write(stdout, findings)
 }
 
 func main() {
