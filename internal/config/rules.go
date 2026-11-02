@@ -10,6 +10,10 @@ type Rule struct {
 
 const awsKeyPattern = `AKIA[0-9A-Z]{16}`
 
+func (r Rule) RunRule(line string) string {
+	return r.Pattern.FindString(line)
+}
+
 func DefaultRules() []Rule {
 	// Return 2-3 basic rules using regexp.MustCompile(...)
 	// e.g. AWS Access Key: `AKIA[0-9A-Z]{16}`

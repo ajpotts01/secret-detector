@@ -17,7 +17,7 @@ func TestReadInputSingle(t *testing.T) {
 
 	var got []string
 
-	err := input.ReadInputSingle(fs, "test.txt", func(lineNum int, line string) {
+	err := input.ReadSingleFile(fs, "test.txt", func(lineNum int, line string) {
 		got = append(got, line)
 	})
 
@@ -66,7 +66,7 @@ func TestReadInputDir(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var got []string
-			err := input.ReadInputDir(tt.fs, ".", func(lineNum int, line string) {
+			err := input.ReadDir(tt.fs, ".", func(lineNum int, line string) {
 				got = append(got, line)
 			})
 

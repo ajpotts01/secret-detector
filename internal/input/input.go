@@ -9,11 +9,11 @@ import (
 	"github.com/ajpotts01/secret-detector/internal/config"
 )
 
-// ReadInputSingle opens a file and allows specification of a worker function for each line.
+// ReadSingleFile opens a file and allows specification of a worker function for each line.
 // Returns error if file can't be opened or if scanning fails.
 // fs.FS is used per the techniques learned for testing in Learn Go with Tests
 // https://quii.gitbook.io/learn-go-with-tests/go-fundamentals/reading-files#file-system-abstractions-introduced-in-go-1.16
-func ReadInputSingle(fileSys fs.FS, path string, worker func(lineNum int, line string)) error {
+func ReadSingleFile(fileSys fs.FS, path string, worker func(lineNum int, line string)) error {
 	f, err := fileSys.Open(path)
 	if err != nil {
 		return err
@@ -24,7 +24,7 @@ func ReadInputSingle(fileSys fs.FS, path string, worker func(lineNum int, line s
 	return readFile(f, worker)
 }
 
-func ReadInputDir(fileSys fs.FS, rootPath string, worker func(lineNum int, line string)) error {
+func ReadDir(fileSys fs.FS, rootPath string, worker func(lineNum int, line string)) error {
 	skipDirs := config.DefaultIgnoredDirs()
 	return fs.WalkDir(fileSys, rootPath, func(path string, entry fs.DirEntry, err error) error {
 		if err != nil {
@@ -38,7 +38,7 @@ func ReadInputDir(fileSys fs.FS, rootPath string, worker func(lineNum int, line 
 			return nil
 		}
 
-		return ReadInputSingle(fileSys, path, worker)
+		return ReadSingleFile(fileSys, path, worker)
 	})
 }
 
